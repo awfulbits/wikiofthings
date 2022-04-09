@@ -50,6 +50,7 @@ func Start() {
 	log.Print("Server Started")
 
 	// Test page creation
+	log.Print("Running test page")
 	if err = testpage.RunTest(db); err != nil {
 		log.Fatalf("cannot create test page: %s\n", err)
 	}
