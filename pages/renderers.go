@@ -1,13 +1,11 @@
 package pages
 
-import (
-	"github.com/gomarkdown/markdown/html"
-)
+// import (
+// 	"github.com/gomarkdown/markdown/html"
+// )
 
-func mdRenderer() *html.Renderer {
-	htmlFlags := html.CommonFlags | html.HrefTargetBlank
-	opts := html.RendererOptions{Flags: htmlFlags}
-	renderer := html.NewRenderer(opts)
-	renderer = nil
-	return renderer
-}
+// func mdRenderer(on bool) *html.Renderer {
+// 	htmlFlags := html.CommonFlags | html.HrefTargetBlank
+// 	opts := html.RendererOptions{Flags: htmlFlags}
+// 	return html.NewRenderer(opts)
+// }

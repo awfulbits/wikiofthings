@@ -8,17 +8,23 @@ import (
 )
 
 type Title struct {
-	MD   []byte
-	Tags []string
-	Page template.HTML
+	MD           []byte
+	Tags         []string
+	Page         *pages.Page
+	PageTemplate template.HTML
 }
 
-func loadTitle(title string, db *database.DB) (*Title, error) {
-	page := pages.New(title)
-	err := page.Load(db)
+func loadTitle(title string, db *database.DB) (titlePage *Title, err error) {
+	page, err := pages.New(title, db)
 	if err != nil {
-		return nil, err
+		return
 	}
-	htmlPage := template.HTML(page.HTML)
-	return &Title{Page: htmlPage}, nil
+	err = page.Load(db)
+	if err != nil {
+		return
+	}
+	titlePage = &Title{}
+	titlePage.PageTemplate = template.HTML(page.HTML)
+	titlePage.Page = page
+	return
 }

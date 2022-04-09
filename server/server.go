@@ -10,29 +10,31 @@ import (
 	"time"
 
 	"github.com/awfulbits/wikiofthings/database"
+	"github.com/awfulbits/wikiofthings/testpage"
 	"github.com/gorilla/mux"
 )
 
-var port = os.Getenv("PORT")
-
 func Start() {
+	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
 	}
 
-	db, err := database.Start()
+	db, err := database.Start("pages", "pageidindex")
 	if err != nil {
-		log.Fatalf("Database Failed To Start:%+v", err)
+		log.Fatalf("Database Failed To Start:%+v\n", err)
 	}
 	log.Print("Database Started")
 
 	router := mux.NewRouter()
 	router.HandleFunc("/title/{title}", titleHandler(db))
+	// router.HandleFunc("/edit/", editHandler(db))
+	// router.HandleFunc("/edit/{pageId}", editHandler(db))
 	http.Handle("/", router)
 
 	srv := &http.Server{
 		Handler:      router,
-		Addr:         "127.0.0.1:" + port,
+		Addr:         ":" + port,
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}
@@ -47,6 +49,12 @@ func Start() {
 	}()
 	log.Print("Server Started")
 
+	// Test page creation
+	if err = testpage.RunTest(db); err != nil {
+		log.Fatalf("cannot create test page: %s\n", err)
+	}
+	log.Print("Test page ran successfully, see /title/Hello_friend")
+
 	<-done
 	log.Print("Server Stopped")
 
@@ -58,7 +66,7 @@ func Start() {
 	}()
 
 	if err := srv.Shutdown(ctx); err != nil {
-		log.Fatalf("Server Shutdown Failed:%+v", err)
+		log.Fatalf("Server Shutdown Failed:%+v\n", err)
 	}
 	log.Print("Server Exited Properly")
 }

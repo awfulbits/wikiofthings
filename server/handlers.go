@@ -14,6 +14,7 @@ func titleHandler(db *database.DB) http.HandlerFunc {
 		titlePage, err := loadTitle(vars["title"], db)
 		if err != nil {
 			http.NotFound(w, r)
+			return
 		}
 		renderTitleTemplate(w, "title", titlePage)
 	})
