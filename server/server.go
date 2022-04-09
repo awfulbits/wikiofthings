@@ -15,14 +15,14 @@ import (
 )
 
 func Start() {
-	port := os.Getenv("PORT")
+	port := os.Getenv("WOT_PORT")
 	if port == "" {
 		port = "8080"
 	}
 
 	db, err := database.Start("pages", "pageidindex")
 	if err != nil {
-		log.Fatalf("Database Failed To Start:%+v\n", err)
+		log.Panicf("database failed to start:%+v\n", err)
 	}
 	log.Print("Database Started")
 
@@ -44,17 +44,17 @@ func Start() {
 
 	go func() {
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Fatalf("listen: %s\n", err)
+			log.Panicf("listen: %s\n", err)
 		}
 	}()
-	log.Print("Server Started")
+	log.Printf("Server Started On Port %v", port)
 
 	// Test page creation
-	log.Print("Running test page")
+	log.Print("Running Test Page")
 	if err = testpage.RunTest(db); err != nil {
-		log.Fatalf("cannot create test page: %s\n", err)
+		log.Panicf("cannot create test page: %s\n", err)
 	}
-	log.Print("Test page ran successfully, see /title/Hello_friend")
+	log.Print("Test Page Ran Successfully, See /title/Hello_friend")
 
 	<-done
 	log.Print("Server Stopped")
@@ -67,7 +67,7 @@ func Start() {
 	}()
 
 	if err := srv.Shutdown(ctx); err != nil {
-		log.Fatalf("Server Shutdown Failed:%+v\n", err)
+		log.Panicf("server shutdown failed:%+v\n", err)
 	}
 	log.Print("Server Exited Properly")
 }
