@@ -11,6 +11,7 @@ build: clean
 
 clean:
 	@rm -rf $(BIN_DIR)
+	go clean -modcache
 
 run:
 	@go run main.go
