@@ -22,7 +22,7 @@ func Start() {
 
 	db, err := database.Start("pages", "pageidindex")
 	if err != nil {
-		log.Panicf("database failed to start:%+v\n", err)
+		log.Fatalf("database failed to start:%+v\n", err)
 	}
 	log.Print("Database Started")
 
@@ -44,7 +44,7 @@ func Start() {
 
 	go func() {
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Panicf("listen: %s\n", err)
+			log.Fatalf("listen: %s\n", err)
 		}
 	}()
 	log.Printf("Server Started On Port %v", port)
@@ -52,7 +52,7 @@ func Start() {
 	// Test page creation
 	log.Print("Running Test Page")
 	if err = testpage.RunTest(db); err != nil {
-		log.Panicf("cannot create test page: %s\n", err)
+		log.Fatalf("cannot create test page: %s\n", err)
 	}
 	log.Print("Test Page Ran Successfully, See /title/Hello_friend")
 
@@ -67,7 +67,7 @@ func Start() {
 	}()
 
 	if err := srv.Shutdown(ctx); err != nil {
-		log.Panicf("server shutdown failed:%+v\n", err)
+		log.Fatalf("server shutdown failed:%+v\n", err)
 	}
 	log.Print("Server Exited Properly")
 }
